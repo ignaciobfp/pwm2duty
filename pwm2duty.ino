@@ -12,17 +12,21 @@ volatile unsigned long hill_duration = 0;
 volatile unsigned long total_duration = 0;
 
 void rising() {
+  noInterrupts();
   last_event_time = micros();
   current_time_rising = last_event_time;
   total_duration = current_time_rising - prev_time_rising;
   prev_time_rising = current_time_rising;
   attachInterrupt(digitalPinToInterrupt(signalpin), falling, FALLING);
+  interrupts();
 }
  
 void falling() {
+  noInterrupts();
   last_event_time = micros();
   hill_duration = last_event_time - prev_time_rising;
   attachInterrupt(digitalPinToInterrupt(signalpin), rising, RISING);
+  interrupts();
 }
  
 void setup() {
